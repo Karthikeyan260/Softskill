@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Skills Chatbot</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff; /* Background color */
+            color: #000000; /* Text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #1b5e20; /* Header color */
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .subheader {
+            color: #1a8572; /* Subheader color */
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .chatbox {
+            border: 1px solid #78c79e; /* Border color */
+            border-radius: 5px;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background-color: #f3f8f2; /* Response box color */
+        }
+
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2bbbad; /* Button color */
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #388e3c; /* Button hover color */
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d; /* Gray text for footer */
+        }
+
+        .user-message {
+            text-align: right;
+            color: #2bbbad;
+            margin: 5px 0;
+        }
+
+        .assistant-message {
+            text-align: left;
+            color: #1a8572;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Soft Skills Chatbot</h1>
+        <p class="subheader">Ask about soft skills or any related queries!</p>
+        <div id="chatbox" class="chatbox">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <input type="text" id="userInput" placeholder="Ask about soft skills..." />
+        <button id="sendButton">Send</button>
+        <div class="footer">
+            <h4>Knowledge is Wealth</h4>
+            <p>Developed by Karthik</p>
+        </div>
+    </div>
+    <script>
+        // Your API key here
+        const API_KEY = "YAIzaSyCjug6CogR0tcFqj647wxQhixj0SYw8sm0";  // Replace with your actual API key
+
+        document.getElementById("sendButton").addEventListener("click", function () {
+            const userInput = document.getElementById("userInput").value;
+            if (userInput.trim() === "") return; // Ignore empty input
+
+            appendMessage("user", userInput);
+            document.getElementById("userInput").value = ""; // Clear input
+
+            // Generate response using the API
+            fetchBotResponse(userInput);
+        });
+
+        // Function to fetch bot responses from an API
+        function fetchBotResponse(userInput) {
+            appendMessage("assistant", "Thinking..."); // Show a thinking message
+            const url = "https://api.example.com/endpoint"; // Replace with your API endpoint
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${API_KEY}` // Include your API key in the header
+                },
+                body: JSON.stringify({ message: userInput }) // Send user input as part of the request body
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botResponse = data.reply; // Adjust based on your API's response structure
+                appendMessage("assistant", botResponse);
+            })
+            .catch(error => {
+                console.error("Error fetching bot response:", error);
+                appendMessage("assistant", "Sorry, there was an error. Please try again.");
+            });
+        }
+
+        // Function to append messages to the chatbox
+        function appendMessage(role, message) {
+            const chatbox = document.getElementById("chatbox");
+            const messageElement = document.createElement("div");
+            messageElement.className = role === "user" ? "user-message" : "assistant-message";
+            messageElement.innerText = message;
+            chatbox.appendChild(messageElement);
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        }
+    </script>
+</body>
+</html>
